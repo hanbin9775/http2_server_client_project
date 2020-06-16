@@ -10,8 +10,9 @@
 ## Requirements
 
 nghttp2 library
+
 [for more detailed information][link]
-[link]:https://nghttp2.org/documentation/package_README.html  
+[link]: https://nghttp2.org/documentation/package_README.html  
 
 <br>
 
