@@ -12,7 +12,8 @@
 nghttp2 library
 
 [for more detailed information][link]
-[link]: https://nghttp2.org/documentation/package_README.html "nghttp2 doc"  
+
+[link]: https://nghttp2.org/documentation/package_README.html
 
 <br>
 
