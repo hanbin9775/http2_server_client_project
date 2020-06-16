@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
   sess.on_connect([&sess](tcp::resolver::iterator endpoint_it) {
     boost::system::error_code ec;
 
-    auto req = sess.submit(ec, "GET", "http://localhost:3000/");
+    auto req = sess.submit(ec, "GET", "http://localhost:3000");
 
     req->on_response([&sess](const response &res) {
       std::cerr << "response received!" << std::endl;
