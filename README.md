@@ -12,7 +12,7 @@
 nghttp2 library
 
 [for more detailed information][link]
-[link]: https://nghttp2.org/documentation/package_README.html  
+[link]: https://nghttp2.org/documentation/package_README.html "nghttp2 doc"  
 
 <br>
 
@@ -24,3 +24,4 @@ nghttp2 library
 3. ./server.o
 4.  g++ -o client.o client.cc -lnghttp2_asio -lboost_system -lssl -lcrypto -lpthread
 5. ./client.o
+6. Keep working!
