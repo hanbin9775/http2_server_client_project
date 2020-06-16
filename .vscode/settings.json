@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.tcc": "cpp",
+        "ostream": "cpp",
+        "unordered_map": "cpp",
+        "initializer_list": "cpp",
+        "string": "cpp",
+        "*.ipp": "cpp"
+    }
+}
