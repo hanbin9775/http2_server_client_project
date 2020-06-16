@@ -1,5 +1,6 @@
 #include <nghttp2/asio_http2_server.h>
 #include <iostream>
+#include "class/Subscriber.h"
 
 using namespace nghttp2::asio_http2;
 using namespace nghttp2::asio_http2::server;
@@ -14,22 +15,16 @@ int main(int argc, char *argv[]) {
   configure_tls_context_easy(ec, tls);
 
   http2 server;
+  Subscriber sub;
 
-  //cache specific object
-  server.handle("/", [](const request &req, const response &res) {
-    boost::system::error_code ec;
-    auto push = res.push(ec, "GET", "css/style.css");
-    push->write_head(200);
-    push->end(file_generator("css/style.css"));
-
+  //Register
+  server.handle("/register", [&sub](const request &req, const response &res) {
     res.write_head(200);
-    res.end(file_generator("../index.html"));
-  });
-
-
-  server.handle("/style.css", [](const request &req, const response &res) {
-    res.write_head(200);
-    res.end(file_generator("css/style.css"));
+    sub.setFirstName("HanBin");
+    sub.setLastName("Kim");
+    sub.setPhoneNumber("01012349775");
+    sub.setAddressp("S.Korea");
+    res.end("Username : "+sub.getFirstName()+" is registered!");
   });
 
   if (server.listen_and_serve(ec, tls, "localhost", "3000")) {

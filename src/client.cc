@@ -23,26 +23,38 @@ int main(int argc, char *argv[]) {
   sess.on_connect([&sess](tcp::resolver::iterator endpoint_it) {
     boost::system::error_code ec;
 
-    auto req = sess.submit(ec, "GET", "http://localhost:3000");
+    //Command Line UI
+    std::cout<<"**************************************"<<std::endl;
+    std::cout<<"*       Chatting Applicaion          *"<<std::endl;
+    std::cout<<"**************************************"<<std::endl<<std::endl;
 
-    req->on_response([&sess](const response &res) {
-      std::cerr << "response received!" << std::endl;
-      res.on_data([&sess](const uint8_t *data, std::size_t len) {
-        std::cerr.write(reinterpret_cast<const char *>(data), len);
-        std::cerr << std::endl;
-      });
-    });
-
-    req->on_push([](const request &push) {
-      std::cerr << "push request received!" << std::endl;
-      push.on_response([](const response &res) {
-        std::cerr << "push response received!" << std::endl;
-        res.on_data([](const uint8_t *data, std::size_t len) {
-          std::cerr.write(reinterpret_cast<const char *>(data), len);
-          std::cerr << std::endl;
-        });
-      });
-    });
+    std::cout<<"0. quit"<<std::endl;
+    std::cout<<"1. register"<<std::endl;
+    std::cout<<"2. chat"<<std::endl;
+    std::cout<<"3. Ask for location"<<std::endl<<std::endl;
+    std::cout<<"Input : ";
+    int input;
+    std::cin >> input;
+    while(input!=0){
+      switch(input){
+        case 0:
+          sess.shutdown();
+          break;
+        case 1:
+          //POST /register
+          auto register_req = sess.submit(ec, "POST", "http://localhost:3000/register");
+          register_req->on_response([&sess](const response &res) {
+            std::cerr << "registeration complete!" << std::endl;
+            res.on_data([&sess](const uint8_t *data, std::size_t len) {
+              std::cerr.write(reinterpret_cast<const char *>(data), len);
+            });
+            //shutdown for now
+            sess.shutdown();
+          });
+          input=0;
+          break;
+      }
+    }
   });
 
   sess.on_error([](const boost::system::error_code &ec) {
