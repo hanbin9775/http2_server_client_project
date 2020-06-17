@@ -22,6 +22,12 @@ nghttp2 library
 0. There's no Makefile yet
 1. cd src
 2. make key directory and create key file and cert file.
+
+>   mkdir key
+>   cd key
+>   openssl genrsa -out server.key 2048
+>   openssl req -new -x509 -sha256 -key privkey.pem -out server.crt -out server.crt -days 365
+
 3. g++ class/Subscriber.cc -o server.o server.cc -lnghttp2_asio -lboost_system -lssl -lcrypto -lpthread 
 4. ./server.o
 5.  g++ -o client.o client.cc -lnghttp2_asio -lboost_system -lssl -lcrypto -lpthread
