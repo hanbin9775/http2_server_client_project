@@ -26,7 +26,7 @@ nghttp2 library
 >   mkdir key
 >   cd key
 >   openssl genrsa -out server.key 2048
->   openssl req -new -x509 -sha256 -key privkey.pem -out server.crt -out server.crt -days 365
+>   openssl req -new -x509 -sha256 -key server.key -out server.crt -out server.crt -days 365
 
 3. g++ class/Subscriber.cc -o server.o server.cc -lnghttp2_asio -lboost_system -lssl -lcrypto -lpthread 
 4. ./server.o
