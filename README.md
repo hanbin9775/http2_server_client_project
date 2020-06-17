@@ -21,8 +21,9 @@ nghttp2 library
 
 0. There's no Makefile yet
 1. cd src
-2. g++ class/Subscriber.cc -o server.o server.cc -lnghttp2_asio -lboost_system -lssl -lcrypto -lpthread 
-3. ./server.o
-4.  g++ -o client.o client.cc -lnghttp2_asio -lboost_system -lssl -lcrypto -lpthread
-5. ./client.o
-6. Keep working!
+2. make key directory and create key file and cert file.
+3. g++ class/Subscriber.cc -o server.o server.cc -lnghttp2_asio -lboost_system -lssl -lcrypto -lpthread 
+4. ./server.o
+5.  g++ -o client.o client.cc -lnghttp2_asio -lboost_system -lssl -lcrypto -lpthread
+6. ./client.o
+7. Keep working!
