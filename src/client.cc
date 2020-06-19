@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include <nghttp2/asio_http2_client.h>
 
 using boost::asio::ip::tcp;
@@ -33,6 +32,7 @@ int main(int argc, char *argv[]) {
     std::cout<<"2. chat"<<std::endl;
     std::cout<<"3. Ask for location"<<std::endl<<std::endl;
     std::cout<<"Input : ";
+    
     int input;
     std::cin >> input;
     while(input!=0){
@@ -40,14 +40,25 @@ int main(int argc, char *argv[]) {
         case 0:
           sess.shutdown();
           break;
-        case 1:
-          //POST /register
-          auto register_req = sess.submit(ec, "POST", "http://localhost:3000/register");
+        case 1: //POST /register
+          std::string request_body ="";
+          std::string temp;
+          std::cout<<"First Name : ";
+          std::cin>> temp;
+          request_body+=temp+" ";
+          std::cout<<"Last Name : ";
+          std::cin>> temp;
+          request_body+=temp+" ";
+          std::cout<<"PhoneNumber : ";
+          std::cin>> temp;
+          request_body+=temp+" ";
+          std::cout<<"Address : ";
+          std::cin>> temp;
+          request_body+=temp+" ";
+
+          auto register_req = sess.submit(ec, "POST", "http://localhost:3000/register",request_body);
           register_req->on_response([&sess](const response &res) {
             std::cerr << "registeration complete!" << std::endl;
-            res.on_data([&sess](const uint8_t *data, std::size_t len) {
-              std::cerr.write(reinterpret_cast<const char *>(data), len);
-            });
             //shutdown for now
             sess.shutdown();
           });
