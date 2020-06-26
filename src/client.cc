@@ -35,37 +35,34 @@ int main(int argc, char *argv[]) {
     
     int input;
     std::cin >> input;
-    while(input!=0){
-      switch(input){
-        case 0:
-          sess.shutdown();
-          break;
-        case 1: //POST /register
-          std::string request_body ="";
-          std::string temp;
-          std::cout<<"First Name : ";
-          std::cin>> temp;
-          request_body+=temp+" ";
-          std::cout<<"Last Name : ";
-          std::cin>> temp;
-          request_body+=temp+" ";
-          std::cout<<"PhoneNumber : ";
-          std::cin>> temp;
-          request_body+=temp+" ";
-          std::cout<<"Address : ";
-          std::cin>> temp;
-          request_body+=temp+" ";
-
-          auto register_req = sess.submit(ec, "POST", "http://localhost:3000/register",request_body);
-          register_req->on_response([&sess](const response &res) {
-            std::cerr << "registeration complete!" << std::endl;
-            //shutdown for now
-            sess.shutdown();
-          });
-          input=0;
-          break;
-      }
-    }
+    //if input == 1
+    std::string request_body ="";
+    std::string temp;
+    std::cout<<"First Name : ";
+    std::cin>> temp;
+    request_body+=temp+" ";
+    std::cout<<"Last Name : ";
+    std::cin>> temp;
+    request_body+=temp+" ";
+    std::cout<<"PhoneNumber : ";
+    std::cin>> temp;
+    request_body+=temp+" ";
+    std::cout<<"Address : ";
+    std::cin>> temp;
+    request_body+=temp+" ";
+    std::cerr<<request_body<<std::endl;
+    
+    auto register_req = sess.submit(ec, "POST", "http://localhost:3000/register",request_body);
+    
+    register_req->on_response([&sess](const response &res) {
+      std::cerr << "registeration complete!" << std::endl;
+      //shutdown for now
+      res.on_data([](const uint8_t *data, std::size_t len) {
+        std::cerr.write(reinterpret_cast<const char *>(data), len);
+        std::cerr << std::endl;
+      });
+      sess.shutdown();
+    });
   });
 
   sess.on_error([](const boost::system::error_code &ec) {

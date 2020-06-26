@@ -28,36 +28,37 @@ int main(int argc, char *argv[]) {
     res.write_head(200);
     req.on_data([&sub, &v](const uint8_t *data, std::size_t len){
       //request body parser
+      std::cerr<<"received request body : ";
+      std::cerr.write(reinterpret_cast<const char *>(data), len);
+      std::cerr<<"\n";
       int cur=0;
       int space;
       std::string str;
-      str = (char *)data;
-      std::cerr<<str;
-      space = str.find(' ', cur);
-      std::cerr<<space<<std::endl;
-      sub.setFirstName(str.substr(cur, space-cur));
-      cur = space + 1;  
-      space = str.find(' ',cur);
-      std::cerr<<space<<std::endl;
-      sub.setLastName(str.substr(cur, space-cur));
-      cur = space + 1;
-      space = str.find(' ',cur);
-      std::cerr<<space<<std::endl;
-      sub.setPhoneNumber(str.substr(cur, space-cur));
-      cur = space + 1;
-      space = str.find(' ',cur);
-      std::cerr<<space<<std::endl;
-      sub.setAddressp(str.substr(cur, space-cur));
-      v.push_back(sub);
-      for(int i=0; i<v.size(); i++){
-        std::cerr<<v[i].getFirstName()<<std::endl;
-        std::cerr<<v[i].getLastName()<<std::endl;
-        std::cerr<<v[i].getPhoneNumber()<<std::endl;
-        std::cerr<<v[i].getAddressp()<<std::endl;
+      str.assign((char*)data,len);
+      //check if request body is empty
+      if(str!=""){
+        space = str.find(' ', cur);
+        sub.setFirstName(str.substr(cur, space-cur));
+        cur = space + 1;  
+        space = str.find(' ',cur);
+        sub.setLastName(str.substr(cur, space-cur));
+        cur = space + 1;
+        space = str.find(' ',cur);
+        sub.setPhoneNumber(str.substr(cur, space-cur));
+        cur = space + 1;
+        space = str.find(' ',cur);
+        sub.setAddressp(str.substr(cur, space-cur));
+        v.push_back(sub);
+        std::cerr<<"v size : " <<v.size()<< std::endl;
+        for(int i=0; i<v.size(); i++){
+          std::cerr<<v[i].getFirstName()<<std::endl;
+          std::cerr<<v[i].getLastName()<<std::endl;
+          std::cerr<<v[i].getPhoneNumber()<<std::endl;
+          std::cerr<<v[i].getAddressp()<<std::endl;
+        }
       }
     });
-
-    res.end("complete");
+    res.end("response_body");
   });
 
   if (server.listen_and_serve(ec, tls, "localhost", "3000")) {
