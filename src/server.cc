@@ -58,7 +58,59 @@ int main(int argc, char *argv[]) {
         }
       }
     });
-    res.end("response_body");
+    res.end("registeration complete");
+  });
+
+  
+  //Search address
+  server.handle("/search", [&v](const request &req, const response &res) {
+    res.write_head(200);
+    std::string address ="default";
+    req.on_data([&v,&address](const uint8_t *data, std::size_t len){
+      //check if request body is empty
+      std::string name;
+      name.assign((char*)data,len);
+      for(int i=0; i<v.size(); i++){
+        if(name==v[i].getLastName()){
+          address = v[i].getAddressp();
+        }
+      }
+    });
+    res.end(v[0].getAddressp());
+  });
+
+  server.handle("/", [](const request &req, const response &res) {
+      auto path = percent_decode(req.uri().path);
+      if (!check_path(path)) {
+        res.write_head(404);
+        res.end();
+        return;
+      }
+
+      if (path == "/") {
+        path = "/subscriber.txt";
+      }
+
+      path = "/mnt/c/Users/user/Desktop/Joel/http2_server_client_project" + path;
+      auto fd = open(path.c_str(), O_RDONLY);
+      if (fd == -1) {
+        res.write_head(404);
+        res.end();
+        std::cerr<<"no such file";
+        return;
+      }
+
+      auto header = header_map();
+
+      struct stat stbuf;
+      if (stat(path.c_str(), &stbuf) == 0) {
+        header.emplace("content-length",
+                       header_value{std::to_string(stbuf.st_size)});
+        header.emplace("last-modified",
+                       header_value{http_date(stbuf.st_mtime)});
+      }
+      res.write_head(200, std::move(header));
+      res.end(file_generator_from_fd(fd));
   });
 
   if (server.listen_and_serve(ec, tls, "localhost", "3000")) {

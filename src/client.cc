@@ -35,34 +35,68 @@ int main(int argc, char *argv[]) {
     
     int input;
     std::cin >> input;
-    //if input == 1
-    std::string request_body ="";
-    std::string temp;
-    std::cout<<"First Name : ";
-    std::cin>> temp;
-    request_body+=temp+" ";
-    std::cout<<"Last Name : ";
-    std::cin>> temp;
-    request_body+=temp+" ";
-    std::cout<<"PhoneNumber : ";
-    std::cin>> temp;
-    request_body+=temp+" ";
-    std::cout<<"Address : ";
-    std::cin>> temp;
-    request_body+=temp+" ";
-    std::cerr<<request_body<<std::endl;
     
-    auto register_req = sess.submit(ec, "POST", "http://localhost:3000/register",request_body);
-    
-    register_req->on_response([&sess](const response &res) {
-      std::cerr << "registeration complete!" << std::endl;
-      //shutdown for now
-      res.on_data([](const uint8_t *data, std::size_t len) {
-        std::cerr.write(reinterpret_cast<const char *>(data), len);
-        std::cerr << std::endl;
-      });
-      sess.shutdown();
-    });
+    switch(input){
+      //if input == 1
+      case 1:{
+        std::string temp;
+        std::string request_body ="";
+        std::cout<<"First Name : ";
+        std::cin>> temp;
+        request_body+=temp+" ";
+        std::cout<<"Last Name : ";
+        std::cin>> temp;
+        request_body+=temp+" ";
+        std::cout<<"PhoneNumber : ";
+        std::cin>> temp;
+        request_body+=temp+" ";
+        std::cout<<"Address : ";
+        std::cin>> temp;
+        request_body+=temp+" ";
+        std::cerr<<request_body<<std::endl;
+        
+        auto register_req = sess.submit(ec, "POST", "http://localhost:3000/register",request_body);
+        
+        register_req->on_response([&sess](const response &res) {
+          //shutdown for now
+          res.on_data([](const uint8_t *data, std::size_t len) {
+            std::cerr.write(reinterpret_cast<const char *>(data), len);
+            std::cerr << std::endl;
+          });
+          sess.shutdown();
+        });
+        break;}
+      case 3:{
+        std::cerr<<"search location of ... [insert name] : ";
+        std::string name;
+        std::cin >> name;
+        auto search_req = sess.submit(ec, "GET", "http://localhost:3000/search",name);
+         search_req->on_response([&sess](const response &res) {
+          //shutdown for now
+          res.on_data([](const uint8_t *data, std::size_t len) {
+            std::cerr.write(reinterpret_cast<const char *>(data), len);
+            std::cerr << std::endl;
+          });
+          sess.shutdown();
+        });
+        break;}
+      case 4: {
+        auto req = sess.submit(ec, "GET", "http://localhost:3000/");
+         req->on_response([&sess](const response &res) {
+          //shutdown for now
+          res.on_data([](const uint8_t *data, std::size_t len) {
+            std::cerr.write(reinterpret_cast<const char *>(data), len);
+            std::cerr << std::endl;
+          });
+          sess.shutdown();
+        });
+        break;
+      }
+      default:{
+        std::cerr<<"wrong input. terminate client"<<std::endl;
+        sess.shutdown();
+        break;}
+    }
   });
 
   sess.on_error([](const boost::system::error_code &ec) {
