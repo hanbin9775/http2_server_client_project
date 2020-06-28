@@ -59,6 +59,11 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "typeindex": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "strstream": "cpp",
+        "unordered_set": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "cfenv": "cpp"
     }
 }

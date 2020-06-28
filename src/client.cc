@@ -39,23 +39,30 @@ int main(int argc, char *argv[]) {
     switch(input){
       //if input == 1
       case 1:{
-        std::string temp;
-        std::string request_body ="";
-        std::cout<<"First Name : ";
-        std::cin>> temp;
-        request_body+=temp+" ";
-        std::cout<<"Last Name : ";
-        std::cin>> temp;
-        request_body+=temp+" ";
-        std::cout<<"PhoneNumber : ";
-        std::cin>> temp;
-        request_body+=temp+" ";
-        std::cout<<"Address : ";
-        std::cin>> temp;
-        request_body+=temp+" ";
-        std::cerr<<request_body<<std::endl;
         
-        auto register_req = sess.submit(ec, "POST", "http://localhost:3000/register",request_body);
+        std::string request_body ="";
+        
+        std::cout<<"First Name : ";
+        std::string first_name;
+        std::cin>> first_name;
+        request_body+=first_name+"\n";
+        
+        std::cout<<"Last Name : ";
+        std::string last_name;
+        std::cin>> last_name;
+        request_body+=last_name+"\n";
+        
+        std::cout<<"PhoneNumber : ";
+        std::string phone_number;
+        std::cin>> phone_number;
+        request_body+=phone_number+"\n";
+
+        std::cout<<"Address : ";
+        std::string address;
+        std::cin>> address;
+        request_body+=address;
+        
+        auto register_req = sess.submit(ec, "POST", "http://localhost:3000/subscribers/"+first_name, request_body);
         
         register_req->on_response([&sess](const response &res) {
           //shutdown for now
@@ -67,10 +74,10 @@ int main(int argc, char *argv[]) {
         });
         break;}
       case 3:{
-        std::cerr<<"search location of ... [insert name] : ";
+        std::cerr<<"search location of [insert name] : ";
         std::string name;
         std::cin >> name;
-        auto search_req = sess.submit(ec, "GET", "http://localhost:3000/search",name);
+        auto search_req = sess.submit(ec, "GET", "http://localhost:3000/subscribers/"+name);
          search_req->on_response([&sess](const response &res) {
           //shutdown for now
           res.on_data([](const uint8_t *data, std::size_t len) {
@@ -80,18 +87,6 @@ int main(int argc, char *argv[]) {
           sess.shutdown();
         });
         break;}
-      case 4: {
-        auto req = sess.submit(ec, "GET", "http://localhost:3000/");
-         req->on_response([&sess](const response &res) {
-          //shutdown for now
-          res.on_data([](const uint8_t *data, std::size_t len) {
-            std::cerr.write(reinterpret_cast<const char *>(data), len);
-            std::cerr << std::endl;
-          });
-          sess.shutdown();
-        });
-        break;
-      }
       default:{
         std::cerr<<"wrong input. terminate client"<<std::endl;
         sess.shutdown();

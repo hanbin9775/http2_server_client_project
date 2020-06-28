@@ -41,7 +41,7 @@ nghttp2 library
 
 4. compile server source file and run.
 
->   g++ class/Subscriber.cc -o server.o server.cc -lnghttp2_asio -lboost_system -lssl -lcrypto -lpthread 
+>   g++ -o server.o server.cc -lnghttp2_asio -lboost_system -lssl -lcrypto -lpthread 
 
 >   ./server.o
 
